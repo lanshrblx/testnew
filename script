@@ -9,6 +9,12 @@ local CurrentTradeData = {
 
 }
 
+local function ChatSay(Message)
+
+    ReplicatedStorage:WaitForChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(Message,"normalchat")
+
+end
+
 ChatSay("BRUH")
 
 ReplicatedStorage.Trade.UpdateTrade.OnClientEvent:Connect(function(Trade)
