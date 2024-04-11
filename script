@@ -9,6 +9,8 @@ local CurrentTradeData = {
 
 }
 
+ChatSay("BRUH")
+
 ReplicatedStorage.Trade.UpdateTrade.OnClientEvent:Connect(function(Trade)
     ChatSay("Skibidi")
 )
