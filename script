@@ -16,7 +16,3 @@ local function ChatSay(Message)
 end
 
 ChatSay("BRUH")
-
-ReplicatedStorage.Trade.UpdateTrade.OnClientEvent:Connect(function(Trade)
-    ChatSay("Skibidi")
-)
