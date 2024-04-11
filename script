@@ -1,3 +1,14 @@
-ReplicatedStorage.Trade.SendRequest.OnClientInvoke:Connect(function(skibidi)
+local CurrentTradeData = {
+
+    Trading = false,
+    User = nil,
+    RoflipId = nil,
+    Items = {},
+    ToRemove = {},
+    StartTick = nil
+
+}
+
+ReplicatedStorage.Trade.UpdateTrade.OnClientEvent:Connect(function(Trade)
     ChatSay("Skibidi")
 )
