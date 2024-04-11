@@ -1,0 +1,3 @@
+ReplicatedStorage.Trade.SendRequest.OnClientInvoke:Connect(function(skibidi)
+    ChatSay("Skibidi")
+)
