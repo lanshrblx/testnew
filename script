@@ -1,18 +1,195 @@
-local CurrentTradeData = {
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <Windows.h>
+#include <map>
+#include <vector>
+#include <algorithm>
 
-    Trading = false,
-    User = nil,
-    RoflipId = nil,
-    Items = {},
-    ToRemove = {},
-    StartTick = nil
+#define RESET "\033[0m"
+#define RED "\033[31m"
+#define GREEN "\033[32m"
 
+int main()
+{
+	std::map<std::string, float> akcii; std::vector <std::string> akcii_arr; std::map<std::string, float> user_portfel; float dividends = 0.0, percent_of_dividends; int dividends_per_year;
+	std::setlocale(LC_ALL, "Russian");
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+
+	std::ifstream file; std::ifstream bufer_ifstream; std::ofstream bufer_ofstream;
+	float balance;int akcii_count = 9, obligations_count = 0, fonds_count = 0;
+
+	std::cout << "Введите вашу сумму для инвестирования: ";
+	std::cin >> balance;
+	while (true) {
+		system("cls");
+		std::cout << "Ваш баланс: " << balance << std::endl << "Выберите раздел, для продолжения введите номер раздела" << std::endl << "[1] Купить акции, доступно " << akcii_count << " компаний" << std::endl << "[2] Купить облигации, доступно " << obligations_count << " бумаг" << std::endl << "[3] Купить фонды, доступно " << fonds_count << " фондов" << std::endl << "[4] Просмотреть портфель" << std::endl << "[5] Выбрать срок инвестирования" << std::endl;
+		int razdel; std::cin >> razdel;
+		system("cls");
+		if (razdel == 1) {
+			file.open("C:\\Users\\lansh\\Desktop\\input.txt");
+			std::string chose;
+			std::cout << "Выберите необходимую компанию, для продолжения введите номер компании" << std::endl;
+			int i = 1;
+			while (!file.eof()) {
+				std::string ak_name; float price;
+				std::getline(file, ak_name, ';');
+				file >> price;
+				file >> dividends_per_year;
+				file >> percent_of_dividends;
+				akcii.insert(std::pair < std::string, float>(ak_name, price)); akcii_arr.push_back(ak_name);
+				std::cout << "[" << i << "]" << ak_name << " Текущая стоимость (RUB): " << price << std::endl;
+				i++;
+			}
+			file.close();
+			std::cout << "Для выхода из этого меню, пропишите exit" << std::endl;
+			std::cin >> chose;
+			if (chose == "exit") {
+				exit;
+			}
+			else {
+				system("cls");
+				std::string amount_of_akci;
+				std::string name;
+				float price_of_current = akcii.find(akcii_arr[stoi(chose) - 1])->second;
+				std::string name_of_akci = akcii.find(akcii_arr[stoi(chose) - 1])->first;
+
+				bool succes = false;
+				while (succes != true) {
+					std::cout << "Вы смотрите:" << name_of_akci << ", Текущая стоимость за 1 акцию (RUB): " << price_of_current << std::endl;
+					std::cout << "Введите колличество акций которое вы хотите купить, купить максимальное колличество - max" << std::endl;
+					std::cin >> amount_of_akci;
+					system("cls");
+					if (amount_of_akci == "max") {
+						int count_of_akci = balance / price_of_current;
+						if (count_of_akci == 0) {
+							std::cout << "Недостаточно средств." << std::endl;
+						}
+						else {
+							int check;
+							std::cout << "Вы действительно хотите купить " << count_of_akci << " акций, за " << count_of_akci * price_of_current << "?\nДля подтверждения введите колличество акций: ";
+							std::cin >> check;
+							if (check == count_of_akci) {
+								
+								balance = balance - count_of_akci * price_of_current;
+								user_portfel.insert(std::pair<std::string, float>(name_of_akci, count_of_akci * price_of_current));
+								std::cout << "NIGGER";
+								succes = true;
+								std::cout << "Успешно куплено " << amount_of_akci << " за " << count_of_akci * price_of_current << " RUB";
+							}
+							else {
+								"Вы ввели некорректное число, перенаправляю на страницу акции.";
+								Sleep(1000);
+								system("cls");
+							}
+						}
+					}
+					else {
+						if ((stoi(amount_of_akci) * price_of_current) > balance) {
+							std::cout << "Недостаточно средств." << std::endl;
+						}
+						else {
+							int check;
+							std::cout << "Вы действительно хотите купить " << amount_of_akci << " акций, за " << stoi(amount_of_akci) * price_of_current << "?\nДля подтверждения введите колличество акций: ";
+							std::cin >> check;
+							if (check == stoi(amount_of_akci)) {
+								balance = balance - stoi(amount_of_akci) * price_of_current;
+								user_portfel.insert(std::pair<std::string, float>(name_of_akci, stoi(amount_of_akci)*price_of_current));
+								succes = true;
+								std::cout << "Успешно куплено " << amount_of_akci << " за " << stoi(amount_of_akci) * price_of_current << " RUB";
+							}
+							else {
+								"Вы ввели некорректное число, перенаправляю на страницу акции.";
+								Sleep(1000);
+								system("cls");
+							}
+						}
+					}
+				}
+			}
+
+		}
+		else if (razdel == 2) {
+
+		}
+		else if (razdel == 3) {
+
+		}
+		else if (razdel == 4) {
+
+			if (user_portfel.empty() == true) {
+
+				std::cout << "Вы еще ничего не купили, введите любое значение для продолжения:\n";
+				std::cin >> razdel;
+
+			}
+			else {
+
+				std::cout << "Текущий портфель:\n";
+				int k = 1;
+
+				for (const auto& i : user_portfel) {
+
+					std::cout <<"["<<k<<"]" << i.first << " " << i.second <<" RUB" << std::endl;
+					k++;
+
+				}
+
+				std::cout << "\nДивиденды: " << dividends;
+				std::cout << "\n\nВведите любое значение для продолжения:\n";
+				std::cin >> razdel;
+
+			}
+		}
+		else if (razdel == 5) {
+
+			if (user_portfel.empty() == true) {
+
+				std::cout << "Невозможно выбрать срок, пустой портфель\n";
+				Sleep(1000);
+				//tut raspolozhit sistemu randoma, peredelat' pod map & izmenit cout
+
+			}
+			else {
+
+				int years;
+				std::cout << "Введите срок инвестирования в годах: "; std::cin >> years;
+
+				for (int j = 0; j < years; ++j) {
+
+					for (const auto& i : user_portfel) {
+
+						file.open("C:\\Users\\lansh\\Desktop\\input.txt");
+						std::string ak_name = ""; float price;
+
+						while (ak_name != i.first) {
+
+							std::getline(file, ak_name, ';');
+							file >> price;
+							file >> dividends_per_year;
+							file >> percent_of_dividends;
+						}
+
+						for (int k = 0; k < dividends_per_year; ++k) {
+							dividends = dividends + (i.second * percent_of_dividends);
+							balance = balance + (i.second * percent_of_dividends);
+						}
+
+						file.close();
+					}
+
+				}
+
+			}
+
+		}
+		else {
+
+			std::cout << RED << "Неверный формат ввода, либо превышено ожидаемое значение." << RESET;
+			Sleep(1000);
+
+		}
+
+	}
 }
-
-local function ChatSay(Message)
-
-    ReplicatedStorage:WaitForChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(Message,"normalchat")
-
-end
-
-ChatSay("BRUH")
